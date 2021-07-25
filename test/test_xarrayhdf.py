@@ -1,7 +1,11 @@
+from pathlib import Path
+from tempfile import TemporaryDirectory
+
 import pandas as pd
 import xarray as xr
 
-from xarrayhdf import dataset_to_dataframe
+from xarrayhdf import (dataframe_to_dataset, dataset_to_dataframe,
+                       dataset_to_hdf, hdf_to_dataset)
 
 reference_ds = xr.Dataset(
     data_vars={
@@ -33,6 +37,23 @@ def test_converted_attrs():
 def test_converted_attrs_round_trip():
     df = dataset_to_dataframe(reference_ds)
     ds = dataframe_to_dataset(df)
+    assert ds.timestamp == reference_ds.timestamp
+    assert ds.num_analyses == reference_ds.num_analyses
+    assert ds.disp.units == reference_ds.disp.units
+    assert ds.time.units == reference_ds.time.units
+    assert ds.force.units == reference_ds.force.units
+
+
+def test_saved_attrs():
+    with TemporaryDirectory() as d:
+        filename = Path(d, 'test_saved_attrs.hdf')
+        dataset_to_hdf(reference_ds,
+                       filename,
+                       'test_saved_attrs',
+                       mode='w',
+                       save_attrs=True)
+        ds = hdf_to_dataset(filename, 'test_saved_attrs')
+
     assert ds.timestamp == reference_ds.timestamp
     assert ds.num_analyses == reference_ds.num_analyses
     assert ds.disp.units == reference_ds.disp.units
