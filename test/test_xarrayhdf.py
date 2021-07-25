@@ -28,3 +28,13 @@ def test_converted_attrs():
     assert df.attrs['dataset_attrs::disp::units'] == 'm'
     assert df.attrs['dataset_attrs::time::units'] == 's'
     assert df.attrs['dataset_attrs::force::units'] == 'N'
+
+
+def test_converted_attrs_round_trip():
+    df = dataset_to_dataframe(reference_ds)
+    ds = dataframe_to_dataset(df)
+    assert ds.timestamp == reference_ds.timestamp
+    assert ds.num_analyses == reference_ds.num_analyses
+    assert ds.disp.units == reference_ds.disp.units
+    assert ds.time.units == reference_ds.time.units
+    assert ds.force.units == reference_ds.force.units
