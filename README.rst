@@ -1,8 +1,8 @@
-README
-++++++
+``xarray-hdf``
+++++++++++++++
 
-H1
-==
+Store xarray Datasets using PyTables, with support for attributes.
 
-H2
---
+This is admittedly a bit hackish, but makes it easier to store Datasets and
+DataFrames together in the same HDF5 file. If you just have Datasets, you should
+use NETCDF.
