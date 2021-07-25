@@ -59,8 +59,12 @@ def dataset_to_dataframe(ds: xr.Dataset, dim_order: t.List[str] = None):
     # those names aren't carried over by `to_dataframe`. Probably a bug.
     df.index.names = dim_order
 
-    # Store attributes; since `Index` objects don't support `attrs`, store
-    # everything on the top-level DataFrame
+    # Store top-level attributes
+    for attr, value in ds.attrs.items():
+        df.attrs[attr] = value
+
+    # Store variable attributes; since `Index` objects don't support `attrs`,
+    # store everything on the top-level DataFrame
     for varname, var in ds.variables.items():
         for attr, value in var.attrs.items():
             df.attrs[f'dataset_attrs::{varname}::{attr}'] = value
@@ -75,6 +79,8 @@ def dataframe_to_dataset(df: pd.DataFrame):
         if isinstance(attr, str) and attr.startswith('dataset_attrs::'):
             _, varname, ds_attr = attr.split('::', maxsplit=2)
             ds[varname].attrs[ds_attr] = value
+        else:
+            ds.attrs[attr] = value
 
     return ds
 

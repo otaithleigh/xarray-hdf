@@ -22,6 +22,7 @@ reference_ds.force.attrs['units'] = 'N'
 
 def test_converted_attrs():
     df = dataset_to_dataframe(reference_ds)
+    assert df.attrs['timestamp'] == 'Mon Jun 28 07:42:09 2021'
     assert df.attrs['dataset_attrs::disp::units'] == 'm'
     assert df.attrs['dataset_attrs::time::units'] == 's'
     assert df.attrs['dataset_attrs::force::units'] == 'N'
