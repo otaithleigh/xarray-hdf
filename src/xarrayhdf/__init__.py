@@ -73,6 +73,14 @@ def dataset_to_dataframe(ds: xr.Dataset, dim_order: t.List[str] = None):
 
 
 def dataframe_to_dataset(df: pd.DataFrame):
+    """Convert a DataFrame to a Dataset, respecting the attribute naming
+    convention of `dataset_to_dataframe`.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame to convert.
+    """
     ds = xr.Dataset.from_dataframe(df)
 
     for attr, value in df.attrs.items():
@@ -131,7 +139,7 @@ def dataframe_to_hdf(df: pd.DataFrame,
 
 def hdf_to_dataframe(filename: str, key: str):
     """Read a DataFrame stored by dataframe_to_hdf, including attributes.
-    
+
     Parameters
     ----------
     filename : str
@@ -191,6 +199,15 @@ def dataset_to_hdf(ds: xr.Dataset,
 
 
 def hdf_to_dataset(filename: str, key: str):
+    """Load an xarray Dataset from an HDF5 file, including attributes.
+
+    Parameters
+    ----------
+    filename : str
+        File to read from.
+    key : str
+        HDF key to read from.
+    """
     df = hdf_to_dataframe(filename, key)
     ds = dataframe_to_dataset(df)
 
